@@ -1,5 +1,5 @@
 // Import decorators from TypeORM library
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, AfterRemove, AfterUpdate } from "typeorm";
 
 // Define the User entity
 @Entity()
@@ -13,6 +13,18 @@ export class User {
     @Column()
     password: string; // Password for the user to log in
 
-    /* @Column({ default: true })
-    admin: boolean; // Whether the user is an admin or not */
+    @AfterInsert()
+    logInsert() {
+        console.log('Inserted User with id: ', this.id);
+    }
+
+    @AfterUpdate()
+    logUpdate() {
+        console.log('Updated User with id: ', this.id);
+    }
+
+    @AfterRemove()
+    logRemove() {
+        console.log('Removed User with id: ', this.id);
+    }
 }

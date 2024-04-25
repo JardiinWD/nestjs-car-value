@@ -12,4 +12,6 @@ import { User } from './user.entity';
   // Define the service in the providers array
   providers: [UsersService]
 })
-export class UsersModule { }
+export class UsersModule {
+
+}
