@@ -1,8 +1,21 @@
 // Import decorators from nestjs
-import { Controller, Post, Body, Get, Patch, Param, Query, Delete, NotFoundException } from '@nestjs/common';
+import {
+    Controller,
+    Post,
+    Body,
+    Get,
+    Patch,
+    Param,
+    Query,
+    Delete,
+    NotFoundException,
+    UseInterceptors
+} from '@nestjs/common';
 import { CreateUserDto } from './DTO/create-user.dto';
 import { UpdateUserDto } from './DTO/update-user.dto';
 import { UsersService } from './users.service';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { UserDto } from 'src/users/DTO/user.dto';
 
 @Controller('auth')
 // Define UsersController class with Controller decorator 
@@ -21,8 +34,11 @@ export class UsersController {
 
     /** Find a user by their ID with the UsersService.
      * @param {string} id - The ID of the user to find.
+     * @interceptor {Serialize} A custom made serialize from interceptor
      * @return {Promise<User>} A promise that resolves to the user with the given ID, or null if no user is found.
+     * @throws {NotFoundException} If the user is not found.
      */
+    @Serialize(UserDto)
     @Get('/:id')
     async findUser(@Param('id') id: string) {
         // Find a user by their ID with the UsersService

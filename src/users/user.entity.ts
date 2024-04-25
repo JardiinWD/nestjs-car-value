@@ -1,5 +1,13 @@
 // Import decorators from TypeORM library
-import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, AfterRemove, AfterUpdate } from "typeorm";
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    AfterInsert,
+    AfterRemove,
+    AfterUpdate
+} from "typeorm";
+
 
 // Define the User entity
 @Entity()
