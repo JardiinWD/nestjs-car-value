@@ -9,28 +9,70 @@ import {
     Query,
     Delete,
     NotFoundException,
-    UseInterceptors
+    Session
 } from '@nestjs/common';
 import { CreateUserDto } from './DTO/create-user.dto';
 import { UpdateUserDto } from './DTO/update-user.dto';
 import { UsersService } from './users.service';
+import { AuthService } from './auth.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from 'src/users/DTO/user.dto';
+
 
 @Controller('auth')
 @Serialize(UserDto)
 // Define UsersController class with Controller decorator 
 export class UsersController {
-    constructor(private usersService: UsersService) { }
+
+    /** Initializes a new instance of the class.
+     * @param {UsersService} usersService - The service responsible for managing users.
+     * @param {AuthService} authService - The service responsible for handling user authentication.
+     */
+    constructor(
+        private usersService: UsersService,
+        private authService: AuthService
+    ) { }
+
+
+    /** Retrieves information about the user who is currently logged in.
+     * @param {@Session()} session - the session object containing the user ID
+     * @return {Promise<User>} a promise that resolves to the user object of the logged-in user
+     */
+    @Get('/whoami')
+    whoAmI(@Session() session: any) {
+        return this.usersService.findOne(session.userId);
+    }
+
+    /** Sets the user ID in the session to null.
+     * @param {@Session()} session - the session object
+     */
+    @Post('/signout')
+    signout(@Session() session: any) {
+        session.userId = null;
+    }
 
     /** Creates a new user with the given data.
      * @param {CreateUserDto} body - The user data to be created.
      * @return {void} This function does not return anything.
      */
     @Post('/signup')
-    createUser(@Body() body: CreateUserDto) {
-        // Create a new user with the given data with the UsersService
-        this.usersService.create(body.email, body.password);
+    async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+        // Create a new user with the given data with the authService
+        const user = await this.authService.signup(body.email, body.password);
+        // Set the user ID in the session
+        session.userId = user.id;
+        // Return the user
+        return user;
+    }
+
+    @Post('/signin')
+    async signin(@Body() body: CreateUserDto, @Session() session: any) {
+        // Sign in a user with the given data with the authService
+        const user = await this.authService.signin(body.email, body.password);
+        // Set the user ID in the session
+        session.userId = user.id;
+        // Return the user
+        return user;
     }
 
     /** Find a user by their ID with the UsersService.

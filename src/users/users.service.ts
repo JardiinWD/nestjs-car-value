@@ -35,6 +35,7 @@ export class UsersService {
      * @return {Promise<User>} A promise that resolves to the user with the given ID, or null if no user is found.
      */
     findOne(id: number) {
+        if (!id) return null;
         // Find a user by their ID 
         return this.userRepository.findOneBy({ id });
     }

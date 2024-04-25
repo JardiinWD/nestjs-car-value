@@ -14,7 +14,7 @@ import { Report } from './reports/report.entity';
     entities: [User, Report], // define all entity files here
     synchronize: true, // synchronize the database `true` or `false`
   })],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController], // define all controller files here
+  providers: [AppService], // define all service files here
 })
 export class AppModule { }
