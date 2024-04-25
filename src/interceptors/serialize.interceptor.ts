@@ -8,12 +8,18 @@ import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { plainToClass } from 'class-transformer'
 
+// Define the ClassConstructor interface 
+interface ClassConstructor {
+    // Define the new() method of the interface
+    new(...args: any[]): {}
+}
+
 
 /** Returns a NestJS interceptor that serializes the response data using the provided DTO.
  * @param {any} dto - The DTO class to use for serialization.
  * @return {UseInterceptors} - The NestJS interceptor that serializes the response data.
  */
-export function Serialize(dto: any) {
+export function Serialize(dto: ClassConstructor) {
     return UseInterceptors(new SerializeInterceptor(dto))
 }
 
@@ -23,7 +29,7 @@ export class SerializeInterceptor implements NestInterceptor {
     /** The constructor of the class. 
      * @param {any} dto - The parameter representing a generic dto type
      */
-    constructor(private dto: any) { }
+    constructor(private dto: ClassConstructor) { }
 
     /** A description of the entire function.
      * @param {ExecutionContext} context - The execution context

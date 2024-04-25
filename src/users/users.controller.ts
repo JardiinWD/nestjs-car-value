@@ -18,6 +18,7 @@ import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from 'src/users/DTO/user.dto';
 
 @Controller('auth')
+@Serialize(UserDto)
 // Define UsersController class with Controller decorator 
 export class UsersController {
     constructor(private usersService: UsersService) { }
@@ -38,7 +39,6 @@ export class UsersController {
      * @return {Promise<User>} A promise that resolves to the user with the given ID, or null if no user is found.
      * @throws {NotFoundException} If the user is not found.
      */
-    @Serialize(UserDto)
     @Get('/:id')
     async findUser(@Param('id') id: string) {
         // Find a user by their ID with the UsersService
