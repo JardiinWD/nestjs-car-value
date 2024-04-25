@@ -1,5 +1,5 @@
 // Import decorators from nestjs
-import { Controller, Post, Body, Get, Patch, Param, Query, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Patch, Param, Query, Delete, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './DTO/create-user.dto';
 import { UpdateUserDto } from './DTO/update-user.dto';
 import { UsersService } from './users.service';
@@ -24,9 +24,13 @@ export class UsersController {
      * @return {Promise<User>} A promise that resolves to the user with the given ID, or null if no user is found.
      */
     @Get('/:id')
-    findUser(@Param('id') id: string) {
+    async findUser(@Param('id') id: string) {
         // Find a user by their ID with the UsersService
-        return this.usersService.findOne(parseInt(id));
+        const user = await this.usersService.findOne(parseInt(id));
+        // Check if user exists
+        if (!user) throw new NotFoundException(`User with id ${id} wasn't found`);
+        // Return the user if it exists
+        return user;
     }
 
 

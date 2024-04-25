@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -35,6 +35,7 @@ export class UsersService {
      * @return {Promise<User>} A promise that resolves to the user with the given ID, or null if no user is found.
      */
     findOne(id: number) {
+        // Find a user by their ID 
         return this.userRepository.findOneBy({ id });
     }
 
@@ -47,7 +48,7 @@ export class UsersService {
         // Find a user by their ID
         const user = await this.findOne(id);
         // Check if user exists
-        if (!user) throw new Error(`User with id ${id} wasn't found`);
+        if (!user) throw new NotFoundException(`User with id ${id} wasn't found`);
 
         // Update the user
         Object.assign(user, attrs);
@@ -63,7 +64,7 @@ export class UsersService {
         // Find a user by their ID
         const user = await this.findOne(id);
         // Check if user exists
-        if (!user) throw new Error(`User with id ${id} wasn't found`);
+        if (!user) throw new NotFoundException(`User with id ${id} wasn't found`);
         // Remove the user
         return this.userRepository.remove(user);
     }
