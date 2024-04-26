@@ -14,7 +14,6 @@ interface ClassConstructor {
     new(...args: any[]): {}
 }
 
-
 /** Returns a NestJS interceptor that serializes the response data using the provided DTO.
  * @param {ClassConstructor} dto - The DTO class to use for serialization.
  * @return {UseInterceptors} - The NestJS interceptor that serializes the response data.
@@ -22,7 +21,6 @@ interface ClassConstructor {
 export function Serialize(dto: ClassConstructor) {
     return UseInterceptors(new SerializeInterceptor(dto))
 }
-
 
 export class SerializeInterceptor implements NestInterceptor {
 
