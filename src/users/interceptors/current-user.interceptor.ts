@@ -16,7 +16,6 @@ export class CurrentUserInterceptor implements NestInterceptor {
      * @return {Promise<Observable<any>>} A promise that resolves to an observable of any type.
      */
     async intercept(context: ExecutionContext, handler: CallHandler) {
-        console.log("I'm running before the handler on the current user interceptor");
         // Get the current user from the session
         const request = context.switchToHttp().getRequest();
         // Get the current userID from the session
