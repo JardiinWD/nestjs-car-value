@@ -9,18 +9,31 @@ describe('AuthService', () => {
     let service: AuthService
     let fakeUsersService: Partial<UsersService>
 
-    // define before each test
+    // define before each test where we create a fake copy of the users service
     beforeEach(async () => {
+        // create a new array of users to be used in the tests
+        const users: User[] = [];
         // Create a fake copy of the users service
         fakeUsersService = {
             // The find method is used to find users
-            find: () => Promise.resolve([]),
+            find: (email: string) => {
+                // Filter the users by their email and return them
+                const filteredUsers = users.filter(user => user.email === email);
+                return Promise.resolve(filteredUsers as User[]);
+            },
             // The create method is used to create a new user
-            create: (email: string, password: string) => Promise.resolve({
-                id: 1, // The ID of the created user
-                email, // The email of the created user
-                password // The password of the created user
-            } as User)
+            create: (email: string, password: string) => {
+                // Create a new user with the given email and password
+                const user = {
+                    id: Math.floor(Math.random() * 999999), // Generate a random ID 
+                    email, // Set the email
+                    password // Set the password
+                } as User;
+                // Add the user to the users array 
+                users.push(user);
+                // Return the user as a promise to the fake users service
+                return Promise.resolve(user);
+            }
         }
         // Define a test module for testing the service and its dependencies
         const module = await Test.createTestingModule({
@@ -57,32 +70,38 @@ describe('AuthService', () => {
         expect(hash).toBeDefined();
     })
 
+
     it('Throws an error if user signs up with email that is in use', async () => {
         // Invoke the signup method with an email that is already in use
-        fakeUsersService.find = () => Promise.resolve([{ id: 1, email: 'a', password: '1' } as User]);
-        // Assert that the signup method throws an error
-        await expect(service.signup('MyEmail5@email.com', '123456')).rejects.toThrow(
-            BadRequestException,
-        );
+        await service.signup('MyEmail5@email.com', '123456');
+        await expect(service.signup('MyEmail5@email.com', '123456'))
+            .rejects.toThrow(
+                BadRequestException,
+            );
     });
 
+
     it('Throws if signin is called with an unused email', async () => {
-        // Assert that the signin method throws an error
+        // await for the signin to complete
         await expect(
             // Invoke the signin method with an email that is already in use
-            service.signin('asdflkj@asdlfkj.com', 'passdflkj'),
+            service.signin('MyEmail5@email.com', '123456'),
         ).rejects.toThrow(NotFoundException);
     });
 
+
     it('Throws if an invalid password is provided', async () => {
-        fakeUsersService.find = () =>
-            Promise.resolve([
-                { email: 'MyEmail5@email.com', password: '123456' } as User,
-            ]);
-        await expect(
-            service.signin('MyEmail5@email.com', '1234567'),
-        ).rejects.toThrow(BadRequestException);
+        // await for the signup to complete
+        await service.signup('MyEmail5@email.com', '123456');
+        // Assert that the signin method throws an error
+        await expect(service.signin('MyEmail5@email.com', '1234567'))
+            .rejects.toThrow(BadRequestException);
+    });
+
+
+    it('Returns a user if correct password is provided', async () => {
+        await service.signup('MyEmail5@email.com', '123456');
+        expect(await service.signin('MyEmail5@email.com', '123456')).toBeDefined();
     });
 })
-
 
