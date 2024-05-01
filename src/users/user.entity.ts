@@ -23,6 +23,9 @@ export class User {
     @Column()
     password: string; // Password for the user to log in
 
+    @Column({ default: false })
+    admin: boolean; // Flag to indicate if the user is an admin
+
     // Define the relationship between the User and Report entities
     @OneToMany(() => Report, (report) => report.user)
     reports: Report[]; // Reports created by the user

@@ -27,6 +27,9 @@ export class ReportDto {
     @Expose()
     mileage: number; // The mileage of the car
 
+    @Expose()
+    approved: boolean; // Whether the report has been approved by the admin
+
     @Transform(({ obj }) => obj.user.id) // Transform the user ID into the user object
     @Expose()
     userId: number; // The ID of the user who created the report

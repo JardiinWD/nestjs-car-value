@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Patch, Param } from '@nestjs/common';
 import { CreateReportDto } from './DTO/create-report.dto';
 import { ReportsService } from './reports.service';
 import { AuthGuard } from '../users/guards/auth.guard';
@@ -6,6 +6,8 @@ import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { User } from '../users/user.entity';
 import { ReportDto } from './DTO/report.dto';
 import { Serialize } from '../interceptors/serialize.interceptor';
+import { ApproveReportDto } from './DTO/approve-report.dto';
+import { AdminGuard } from '../users/guards/admin.guard';
 
 @Controller('reports')
 export class ReportsController {
@@ -24,5 +26,17 @@ export class ReportsController {
     createReport(@Body() body: CreateReportDto, @CurrentUser() user: User) {
         // Create a new report with the given data with the ReportsService
         return this.reportsService.create(body, user);
+    }
+
+
+    @Patch('/:id') // Approve a report with the given ID
+    @UseGuards(AdminGuard) // Use the AdminGuard to ensure that only admin users can approve reports
+    /** Approves a report with the given ID.
+     * @param {string} id - The ID of the report to be approved.
+     * @param {ApproveReportDto} body - The data for approving the report.
+     * @return {any} 
+     */
+    approveReport(@Param('id') id: string, @Body() body: ApproveReportDto) {
+        return this.reportsService.changeApproval(id, body.approved);
     }
 }
