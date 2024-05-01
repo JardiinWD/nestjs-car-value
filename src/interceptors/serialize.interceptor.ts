@@ -30,9 +30,9 @@ export class SerializeInterceptor implements NestInterceptor {
     constructor(private dto: ClassConstructor) { }
 
     /** A description of the entire function.
-     * @param {ExecutionContext} context - The execution context
-     * @param {CallHandler} handler - The call handler
-     * @return {Observable<any>} The observable with transformed data
+     * @param {ExecutionContext} context - The execution context of the interceptor
+     * @param {CallHandler} handler - The call handler of the interceptor
+     * @return {Observable<any>} The observable with transformed data 
      */
     intercept(
         context: ExecutionContext,

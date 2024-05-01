@@ -1,11 +1,13 @@
 // Import decorators from TypeORM library
+import { Report } from "../reports/report.entity";
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
     AfterInsert,
     AfterRemove,
-    AfterUpdate
+    AfterUpdate,
+    OneToMany
 } from "typeorm";
 
 
@@ -20,6 +22,10 @@ export class User {
 
     @Column()
     password: string; // Password for the user to log in
+
+    // Define the relationship between the User and Report entities
+    @OneToMany(() => Report, (report) => report.user)
+    reports: Report[]; // Reports created by the user
 
     @AfterInsert()
     logInsert() {

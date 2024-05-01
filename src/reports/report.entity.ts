@@ -1,5 +1,6 @@
 // Import decorators from TypeORM library
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { User } from "../users/user.entity";
 
 // Define Report entity
 @Entity()
@@ -28,4 +29,8 @@ export class Report {
 
     @Column()
     mileage: number;
+
+    // Define the relationship between the Report and User entities
+    @ManyToOne(() => User, (user) => user.reports)
+    user: User;
 }
