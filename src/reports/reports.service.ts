@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Report } from './report.entity';
 import { CreateReportDto } from './DTO/create-report.dto';
 import { User } from '../users/user.entity';
+import { GetEstimateDto } from './DTO/get-estimate.dto';
 
 @Injectable()
 export class ReportsService {
@@ -12,7 +13,6 @@ export class ReportsService {
      * @param userRepository The repository for the Report entity
      */
     constructor(@InjectRepository(Report) private reportRepository: Repository<Report>) { }
-
 
     /** Create a new Report entity
      * @param {CreateReportDto} body - The data for creating the report.
@@ -42,6 +42,24 @@ export class ReportsService {
         report.approved = approved;
         // Save the report in the database
         await this.reportRepository.save(report);
+    }
+
+    /** Asynchronously creates an estimate based on the provided GetEstimateDto.
+     * @param {GetEstimateDto} estimateDto - The data for creating the estimate.
+     * @return {Promise<any>} A promise that resolves with the created estimate.
+     */
+    async createEstimate({ make, model, lng, lat, year, mileage }: GetEstimateDto) {
+        return this.reportRepository.createQueryBuilder()
+            .select('AVG(price)', 'price') // Select all columns
+            .where('make = :make', { make }) // Filter by make property
+            .andWhere('model = :model', { model }) // Filter by model property
+            .andWhere('lng - :lng BETWEEN -5 AND 5', { lng }) // Filter by longitude
+            .andWhere('lat - :lat BETWEEN -5 AND 5', { lat }) // Order by latitude
+            .andWhere('year - :year BETWEEN -3 AND 3', { year }) // Filter by year
+            .orderBy('ABS(mileage - :mileage)', 'DESC') // Order by mileage
+            .setParameters({ mileage })
+            .limit(3)
+            .getRawOne() // Get the raw results as an array of objects
     }
 }
 
