@@ -56,6 +56,7 @@ export class ReportsService {
             .andWhere('lng - :lng BETWEEN -5 AND 5', { lng }) // Filter by longitude
             .andWhere('lat - :lat BETWEEN -5 AND 5', { lat }) // Order by latitude
             .andWhere('year - :year BETWEEN -3 AND 3', { year }) // Filter by year
+            .andWhere('approved IS TRUE') // Filter by approved property
             .orderBy('ABS(mileage - :mileage)', 'DESC') // Order by mileage
             .setParameters({ mileage })
             .limit(3)
