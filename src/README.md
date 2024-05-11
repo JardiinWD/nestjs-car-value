@@ -1,4 +1,21 @@
-# Nesj JS Summary
+# Project Summary
+
+## Nest 
+
+- Guards: Classi utilizzate per implementare la logica di autorizzazione in base a determinati criteri. 
+- DTO (Data Transfer Objects): Oggetti utilizzati per trasferire dati tra diversi strati dell'applicazione, ad esempio tra il client e il server. 
+- Decorators: Funzioni utilizzate per modificare o estendere il comportamento di classi, metodi o proprietà. 
+- Interceptors: Classi utilizzate per intercettare e modificare il flusso delle richieste e delle risposte. 
+- Middlewares: Funzioni o classi utilizzate per eseguire operazioni di elaborazione intermedie durante il ciclo di vita della richiesta. 
+- Services: Classi utilizzate per implementare la logica di business e la gestione dei dati. 
+- Entities: Classi che rappresentano i modelli di dati dell'applicazione, utilizzate per interagire con il database. 
+- Controllers: Classi utilizzate per definire i punti di ingresso per le richieste HTTP e per gestire le interazioni con il client. 
+- Modules: Insiemi di componenti che consentono di organizzare e isolare le funzionalità dell'applicazione in unità discrete e riutilizzabili.
+
+
+***
+
+## App
 
 - [app.controller.ts](#appcontrollerts)
 - [app.module.ts](#appmodulets)
