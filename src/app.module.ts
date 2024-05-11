@@ -24,10 +24,10 @@ const cookieSession = require('cookie-session');
       inject: [ConfigService], // Inject the ConfigService in the AppModule
       useFactory: async (configService: ConfigService) => {
         return {
-          type: 'sqlite',
-          database: configService.get<string>('DB_NAME'),
-          entities: [User, Report],
-          synchronize: true,
+          type: 'sqlite', // SQLite database type
+          database: configService.get<string>('DB_NAME'), // Database name from the .env file
+          entities: [User, Report], // Entities to be stored in the database (Users and Reports)
+          synchronize: true, // Set `true` to synchronize the database schema with the entities
         };
       },
     }),
@@ -47,6 +47,9 @@ const cookieSession = require('cookie-session');
 
 
 export class AppModule {
+  // Inject the ConfigService in the AppModule
+  constructor(private configService: ConfigService) { }
+
   /** Configures the middleware for all routes.
    * @param {MiddlewareConsumer} consumer - The middleware consumer.
    * @return {void} This function does not return anything.
@@ -55,7 +58,7 @@ export class AppModule {
     // Define the middleware for all routes
     consumer.apply(cookieSession({
       // Define cookie session keys
-      keys: ['CHupiCREvOLkho']
+      keys: [this.configService.get('COOKIE_KEY')]
     })).forRoutes('*');
   }
 }
